@@ -1,4 +1,5 @@
 import fs from 'fs'
+import prod_manager from '../managers/product.js'
 
 
 class Cart {
@@ -63,7 +64,67 @@ class Cart {
         }
     }
 
+    async update_cart(cid, pid, x) {
+        try {
+        let auxCart = this.read_cart(cid);
+        let auxProducts = prod_manager.read_products();
+        let auxProduct = prod_manager.read_product(pid);
+        if (auxProduct.stock > x) {
+            
+            auxCart.products.push({
+            id: auxProduct.id,
+            title: auxProduct.title,
+            units: x
+            });
+        }
     
+        for (let index = 0; index < auxProducts.length; index++) {
+            let element = auxProducts[index];
+            if (pid === element.id) {
+            auxProducts[index].stock = element.stock - x;
+            prod_manager.update_product(pid, element);
+            }
+        }
+        // this.carts.push(auxCart);
+        let data_json = JSON.stringify(this.carts, null, 2);
+        await fs.promises.writeFile(this.path, data_json);
+        return 200;
+        } catch (error) {
+        console.log(error);
+        return null;
+        }
+    }
+
+    async delete_cart(cid, pid, x) {
+            try {
+                let auxCart = this.read_cart(cid);
+                let auxCartProduct = findProduct(auxCart, pid, x);
+                let auxProducts = prod_manager.read_products();
+                console.log(auxProducts);
+                let auxProduct = prod_manager.read_product(pid);
+                function findProduct(auxCart, pid, x) {
+                    let foundProduct = auxCart.products.find(product => product.id === pid);
+                    if (foundProduct) {
+                        foundProduct.units -= x;
+                    }
+                    return foundProduct;
+                    } 
+            
+                for (let index = 0; index < auxProducts.length; index++) {
+                    let element = auxProducts[index];
+                    if (pid === element.id) {
+                    auxProducts[index].stock = element.stock + x;
+                    prod_manager.update_product(pid, element);
+                    }
+                }
+                let data_json = JSON.stringify(this.carts, null, 2);
+                await fs.promises.writeFile(this.path, data_json);
+                return 200;
+                } catch (error) {
+                console.log(error);
+                return null;
+            }
+        }
 
     async destroy_cart(id) {
         try {

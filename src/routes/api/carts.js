@@ -88,17 +88,20 @@ router.delete('/:cid', async(req,res,next)=> {
 })
 
 
-router.delete('/:cid', async(req,res,next)=> {
+router.delete("/:cid/product/:pid/:units", async (req, res, next) => {
     try {
-        let id = Number(req.params.cid)
-        let response = await manager.destroy_cart(id)
-        if (response===200) {
-            return res.json({ status:200,message:'cart deleted'})
-        }
-        return res.json({ status:404,message:'not found'})
-    } catch(error) {
-        next(error)
+    let id = Number(req.params.pid);
+    let cid = Number(req.params.cid);
+    let units = Number(req.params.units);
+
+    let response = await manager.delete_cart(cid, id, units);
+    if (response === 200) {
+        return res.json({ status: 200, message: "Units Delete" });
     }
-})
+    return res.json({ status: 404, message: "not found" });
+    } catch (error) {
+    next(error);
+    }
+});
 
 export default router
