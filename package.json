@@ -1,6 +1,12 @@
 {
   "name": "server-nodejs",
   "version": "1.0.0",
+  "description": "Se modificó la clase ProductManager para que gestione un conjunto de productos de un archivo",
+  "main": "index.js",
+  "type": "module",
+  "scripts": {
+    "start": "node ./src/app.js",
+    "dev": "nodemon ./src/app.js"
   "description": "",
   "main": "index.js",
   "type": "module",
@@ -12,6 +18,12 @@
   "license": "ISC",
   "dependencies": {
     "express": "^4.18.2",
+    "express-handlebars": "^7.0.7",
+    "nodemon": "^2.0.22"
+  },
+  "devDependencies": {}
+}
+
     "nodemon": "^2.0.22"
   }
 }
